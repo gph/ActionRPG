@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour{
     public GameObject iceSpike;
 
     private bool magicRunning = false;
+    private bool spellCasted = false;
 
     // Use this for initialization
     void Start () {
@@ -53,17 +54,20 @@ public class PlayerController : MonoBehaviour{
         else
         { 
             if (Input.GetMouseButtonDown(0) && ray.origin.y > -1)
-            {                
+            {
+                
                 if (ray.origin.y > -1)
                 {
                     targetClicked.position = new Vector3(ray.origin.x, transform.position.y, transform.position.z);
                 }
                 // instatiate iceSpike from prefab
                 //iceSpike = (GameObject)Instantiate(iceSpike, new Vector3(targetClicked.position.x, 5, targetClicked.position.z),transform.rotation);
+                if (!spellCasted)
+                {
+                    StartCoroutine(SpellCast(0.5F, targetClicked.position));
+                }                
+                spellCasted = true;
 
-                iceSpike.transform.position = new Vector3(targetClicked.position.x, 5, targetClicked.position.z);
-                iceSpike.gameObject.SetActive(true);
-                magicRunning = !magicRunning;
             }
         }
     }    
@@ -75,5 +79,14 @@ public class PlayerController : MonoBehaviour{
     void OnMouseDown()
     {
         // this object was clicked - do something
+    }
+    IEnumerator SpellCast(float waitTime, Vector3 position)
+    {
+        
+        yield return new WaitForSeconds(waitTime);
+        iceSpike.transform.position = new Vector3(position.x, 5, position.z);
+        iceSpike.gameObject.SetActive(true);
+        magicRunning = !magicRunning;
+        spellCasted = false;
     }
 }
