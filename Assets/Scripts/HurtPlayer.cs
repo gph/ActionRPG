@@ -16,14 +16,18 @@ public class HurtPlayer : MonoBehaviour
 
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.name == "Player")
         {
             Debug.Log("Destroy Player");
             other.gameObject.SetActive(false);
             SceneManager.LoadScene("main");
-
+        }
+        if (other.gameObject.tag == "Magic")
+        {
+            gameObject.SetActive(false);
+            Debug.Log("Enemy Died");
         }
     }
 }

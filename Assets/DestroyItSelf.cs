@@ -17,11 +17,16 @@ public class DestroyItSelf : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D coll)
     {
-        if (coll.gameObject.tag == "Ground")
+        if (coll.gameObject.tag == "Enemy" || coll.gameObject.tag == "Ground")
         {
             gameObject.SetActive(false);
             Debug.Log("Hit " + coll.gameObject.name);
-            coll.gameObject.SetActive(false);
+            //coll.gameObject.SetActive(false);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            Debug.Log("Hit " + coll.gameObject.name);
         }
     }
 }
