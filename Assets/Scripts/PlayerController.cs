@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour{
 
@@ -9,7 +10,9 @@ public class PlayerController : MonoBehaviour{
     public float maxSpeed = 5f;
     public Camera mainCamera;
 
-    public GameObject iceSpike;
+    //public GameObject iceSpike;
+    //public GameObject rock;
+    private GameObject spell;
 
     private bool magicActivated = false;
     private bool spellCasted = false;
@@ -31,7 +34,7 @@ public class PlayerController : MonoBehaviour{
         // camera follows player position
         mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
 
-        // convert mouse position to screen pos
+            // convert mouse position to screen pos
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (magicActivated == false)
@@ -66,30 +69,26 @@ public class PlayerController : MonoBehaviour{
                 {
                     targetPosition = new Vector3(ray.origin.x, transform.position.y, transform.position.z);
                 }
-
-                // instatiate iceSpike from prefab
-                //iceSpike = (GameObject)Instantiate(iceSpike, new Vector3(targetClicked.position.x, 5, targetClicked.position.z),transform.rotation);
-
                 if (!spellCasted)
                 {
                     StartCoroutine(SpellCast(0.5F, targetPosition));
                 }                
                 spellCasted = true;
                 playerAnimator.SetBool("casting", true);
-                Debug.Log("WOW");
             }
         }
     }    
-    public void magic()
+    public void magic(GameObject spell)
     {
         magicActivated = !magicActivated;
+        this.spell = spell;
     }
 
     IEnumerator SpellCast(float waitTime, Vector3 position)
     {
         yield return new WaitForSeconds(waitTime);
-        iceSpike.transform.position = new Vector3(position.x, 5, position.z);
-        iceSpike.gameObject.SetActive(true);
+        spell.transform.position = new Vector3(position.x, 5, position.z);
+        spell.gameObject.SetActive(true);
         magicActivated = !magicActivated;
         spellCasted = false;
         playerAnimator.SetBool("casting", false);
