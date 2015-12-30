@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour{
     public float maxSpeed = 5f;
     public Camera mainCamera;
 
-    //public Transform targetClicked;
     public GameObject iceSpike;
 
     private bool magicActivated = false;
@@ -44,7 +43,6 @@ public class PlayerController : MonoBehaviour{
                 {
                     targetPosition = new Vector3(ray.origin.x, transform.position.y, transform.position.z);
                 }
-                //Debug.Log("Target position\n X: " + ray.origin.x + " Y: " + ray.origin.y);
             }
             if (transform.position.x != targetPosition.x)
             {
@@ -89,7 +87,6 @@ public class PlayerController : MonoBehaviour{
 
     IEnumerator SpellCast(float waitTime, Vector3 position)
     {
-        
         yield return new WaitForSeconds(waitTime);
         iceSpike.transform.position = new Vector3(position.x, 5, position.z);
         iceSpike.gameObject.SetActive(true);
