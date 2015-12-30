@@ -15,7 +15,7 @@ public class EnemySpawn : MonoBehaviour {
 	void Update () {
         if (Input.GetButtonDown("Fire2"))
         {
-            enemySpawned = (GameObject)Instantiate(enemyPrefab, new Vector3(transform.position.x + 5, transform.position.y, transform.position.z), Quaternion.identity);
+            enemySpawned = (GameObject)Instantiate(enemyPrefab, new Vector3(transform.position.x + Random.value * 10 +1, transform.position.y, transform.position.z), Quaternion.identity);
             enemySpawned.transform.parent = myCanvas.transform;
         }
     }
