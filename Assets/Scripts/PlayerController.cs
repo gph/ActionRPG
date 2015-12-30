@@ -17,10 +17,14 @@ public class PlayerController : MonoBehaviour{
 
     Animator playerAnimator;
 
+    void Awake()
+    {
+        playerAnimator = GetComponent<Animator>();
+    }
     // Use this for initialization
     void Start () {
         targetPosition = transform.position;
-        playerAnimator = GetComponent<Animator>();
+        
     }
 	
 	// Update is called once per frame
@@ -31,7 +35,7 @@ public class PlayerController : MonoBehaviour{
         // convert mouse position to screen pos
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (!magicActivated)
+        if (magicActivated == false)
         {
             targetPosition = transform.position;
             if (Input.GetAxisRaw("Fire1") != 0)
@@ -74,6 +78,7 @@ public class PlayerController : MonoBehaviour{
                 }                
                 spellCasted = true;
                 playerAnimator.SetBool("casting", true);
+                Debug.Log("WOW");
             }
         }
     }    
@@ -81,6 +86,7 @@ public class PlayerController : MonoBehaviour{
     {
         magicActivated = !magicActivated;
     }
+
     IEnumerator SpellCast(float waitTime, Vector3 position)
     {
         
