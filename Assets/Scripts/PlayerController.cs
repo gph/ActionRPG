@@ -10,14 +10,20 @@ public class PlayerController : MonoBehaviour{
     public float maxSpeed = 5f;
     public Camera mainCamera;
 
-    //public GameObject iceSpike;
-    //public GameObject rock;
     private GameObject spell;
 
     private bool magicActivated = false;
     private bool spellCasted = false;
 
     Animator playerAnimator;
+
+    // JUMP
+    public float jumpHeight;
+    public Transform groundCheck;
+    public float groundCheckRadius;
+    public LayerMask whatIsGround;
+    private bool grounded;
+    private bool doubleJump;
 
     void Awake()
     {
@@ -26,19 +32,22 @@ public class PlayerController : MonoBehaviour{
     // Use this for initialization
     void Start () {
         targetPosition = transform.position;
-        
     }
 	
 	// Update is called once per frame
-	void Update() {
+	void FixedUpdate() {
         // camera follows player position
-        mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
+        mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
 
-            // convert mouse position to screen pos
+        grounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+
+        // convert mouse position to screen pos
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
         if (magicActivated == false)
         {
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire2")) {
+                Jump();
+            }
             targetPosition = transform.position;
             if (Input.GetAxisRaw("Fire1") != 0)
             {
@@ -92,5 +101,21 @@ public class PlayerController : MonoBehaviour{
         magicActivated = !magicActivated;
         spellCasted = false;
         playerAnimator.SetBool("casting", false);
+    }
+    public void Jump()
+    {
+        if (grounded)
+        {
+            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpHeight);
+            doubleJump = false;
+        }
+        else
+        {
+            if (!doubleJump)
+            {
+                GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpHeight);
+                doubleJump = true;
+            }
+        }        
     }
 }
