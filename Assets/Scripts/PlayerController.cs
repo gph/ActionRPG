@@ -25,6 +25,10 @@ public class PlayerController : MonoBehaviour{
     private bool grounded;
     private bool doubleJump;
 
+    // deny player movement below this position.y
+    private float UI_y;
+
+
     void Awake()
     {
         playerAnimator = GetComponent<Animator>();
@@ -38,27 +42,36 @@ public class PlayerController : MonoBehaviour{
 	void FixedUpdate() {
         // camera follows player position
         mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
+        UI_y = transform.position.y - 3;
 
         grounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+        if (grounded)
+        {
+            doubleJump = false;
+        }
+
 
         // convert mouse position to screen pos
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire2"))
+        {
+                Jump();            
+        }
+
         if (magicActivated == false)
         {
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire2")) {
-                Jump();
-            }
             targetPosition = transform.position;
             if (Input.GetAxisRaw("Fire1") != 0)
             {
-                if (ray.origin.y > -1)
+                if (ray.origin.y > UI_y)
                 {
                     targetPosition = new Vector3(ray.origin.x, transform.position.y, transform.position.z);
                 }
             }
             if (transform.position.x != targetPosition.x)
             {
-                transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, 0.1F, maxSpeed);
+                transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, 0.1F, maxSpeed);                
             }
             if (targetPosition.x > transform.position.x)
             {
@@ -71,13 +84,11 @@ public class PlayerController : MonoBehaviour{
         }
         else
         { 
-            if (Input.GetMouseButtonDown(0) && ray.origin.y > -1)
+            if (Input.GetMouseButtonDown(0) && ray.origin.y > UI_y)
             {
                 
-                if (ray.origin.y > -1)
-                {
-                    targetPosition = new Vector3(ray.origin.x, transform.position.y, transform.position.z);
-                }
+                targetPosition = new Vector3(ray.origin.x, transform.position.y, transform.position.z);
+
                 if (!spellCasted)
                 {
                     StartCoroutine(SpellCast(0.5F, targetPosition));
@@ -89,7 +100,7 @@ public class PlayerController : MonoBehaviour{
     }    
     public void magic(GameObject spell)
     {
-        magicActivated = !magicActivated;
+        magicActivated = true;
         this.spell = spell;
     }
 
@@ -98,16 +109,17 @@ public class PlayerController : MonoBehaviour{
         yield return new WaitForSeconds(waitTime);
         spell.transform.position = new Vector3(position.x, 5, position.z);
         spell.gameObject.SetActive(true);
-        magicActivated = !magicActivated;
         spellCasted = false;
         playerAnimator.SetBool("casting", false);
+        magicActivated = false;
     }
-    public void Jump()
+    void Jump()
     {
+
         if (grounded)
         {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpHeight);
             doubleJump = false;
+            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpHeight);
         }
         else
         {

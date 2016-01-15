@@ -38,17 +38,22 @@ public class EnemyController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.name == "Player")
-        {            
-            //other.gameObject.SetActive(false);
-            SceneManager.LoadScene("main");
-            Debug.Log("Game was restarted");
-        }
+        //if (other.gameObject.name == "Player")
+        //{            
+        //    //other.gameObject.SetActive(false);
+        //    SceneManager.LoadScene("main");
+        //    Debug.Log("Game was restarted");
+        //}
         if (other.gameObject.tag == "Magic")
         {
             //gameObject.SetActive(false);
             Debug.Log("Enemy was hit");
             Damage((int)(Random.value * 10) + 20);
+        }
+        if (other.gameObject.tag == "Player")
+        {
+            Debug.Log("Foot Hit!");
+            Damage((int)(Random.value * 10) + 30);
         }
     }
 
