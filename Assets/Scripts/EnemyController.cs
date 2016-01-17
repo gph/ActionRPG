@@ -7,7 +7,8 @@ public class EnemyController : MonoBehaviour
 {
     private Text texture;
     private Slider healthBar;
-
+    public float maxHealth;
+    private float health;
 
     // Use this for initialization
     void Start()
@@ -20,6 +21,8 @@ public class EnemyController : MonoBehaviour
         //    Debug.Log("No Text object could be found");
         
         healthBar = GetComponentInChildren<Slider>();
+        maxHealth = 100;
+        health = maxHealth;
     }
 
     // Update is called once per frame
@@ -30,9 +33,10 @@ public class EnemyController : MonoBehaviour
             Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
             texture.transform.position = new Vector3(screenPos.x, screenPos.y + 20, screenPos.z);
         //}
-        if (healthBar.value == 0)
+        if (health <= 0)
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
@@ -61,17 +65,21 @@ public class EnemyController : MonoBehaviour
     {
 
         texture.text = damage.ToString();
-        healthBar.value -= damage;
+        health -= damage;
+        healthBar.value -= maxHealth * damage / 100;
+        
         // Start coroutine to show damage for 1 second and clean the text field
-        StartCoroutine(WaitAndPrint(1.0F));
-
-
+        StartCoroutine(WaitAndPrint(0.5F));
+    }
+    public void EnemyPreRespawn()
+    {
+        health = 100;
+        healthBar.value = 100;
+        texture.text = "";
     }
     IEnumerator WaitAndPrint(float waitTime)
     {
-        //texture.gameObject.SetActive(true);
         yield return new WaitForSeconds(waitTime);
-        //texture.gameObject.SetActive(false);
         texture.text = "";
     }
 }

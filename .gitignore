@@ -45,3 +45,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+
+# my ignored directories
+Temp/
+Builds/
+Assets/Art/
+

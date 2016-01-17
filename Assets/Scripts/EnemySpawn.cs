@@ -15,6 +15,17 @@ public class EnemySpawn : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (!enemySpawned.activeSelf)
+        {
+            StartCoroutine(RespawnEnemy(5.0f));
+        }
+    }
+
+    IEnumerator RespawnEnemy(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
         
+        enemySpawned.GetComponent<EnemyController>().EnemyPreRespawn();
+        enemySpawned.SetActive(true);
     }
 }

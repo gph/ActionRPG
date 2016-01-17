@@ -97,6 +97,11 @@ public class PlayerController : MonoBehaviour{
                 playerAnimator.SetBool("casting", true);
             }
         }
+
+        if (transform.position.y < -5)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
+        }
     }    
     public void magic(GameObject spell)
     {
